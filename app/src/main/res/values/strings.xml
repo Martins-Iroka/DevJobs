@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">DevJobs</string>
+    <string name="devjobs_text">DevJobs</string>
+    <string name="search">Search</string>
+    <string name="search_hint">e.g. java</string>
+    <string name="full_time_option">Full Time</string>
+    <string name="company_logo">Company Logo</string>
+    <string name="no_internet_message">No Internet Connection</string>
+    <string name="no_job_available_msg">No jobs available</string>
+</resources>
