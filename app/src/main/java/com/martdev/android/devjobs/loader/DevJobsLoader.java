@@ -1,8 +1,8 @@
 package com.martdev.android.devjobs.loader;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v4.content.AsyncTaskLoader;
+import androidx.annotation.Nullable;
+import androidx.loader.content.AsyncTaskLoader;
 
 import com.martdev.android.devjobs.DevJob;
 import com.martdev.android.devjobs.utils.QueryUtils;
