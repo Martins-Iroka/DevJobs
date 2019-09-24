@@ -7,4 +7,5 @@
     <string name="company_logo">Company Logo</string>
     <string name="no_internet_message">No Internet Connection</string>
     <string name="no_job_available_msg">No jobs available</string>
+    <string name="logo">Logo</string>
 </resources>

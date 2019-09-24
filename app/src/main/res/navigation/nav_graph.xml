@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/devJobSearchFragment">
+
+    <fragment
+        android:id="@+id/devJobSearchFragment"
+        android:name="com.martdev.android.devjobs.devjobsearch.DevJobSearchFragment"
+        android:label="DevJobSearchFragment"
+        tools:layout="@layout/devjobs_search_fragment">
+        <action
+            android:id="@+id/action_devJobSearchFragment_to_devJobResultFragment"
+            app:destination="@id/devJobResultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/devJobResultFragment"
+        android:name="com.martdev.android.devjobs.devjobresult.DevJobResultFragment"
+        android:label="DevJobResultFragment"
+        tools:layout="@layout/devjobs_result_fragment">
+        <argument
+            android:name="keyword"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_devJobResultFragment_to_devJobDetail"
+            app:destination="@id/devJobDetail" />
+    </fragment>
+    <fragment
+        android:id="@+id/devJobDetail"
+        android:name="com.martdev.android.devjobs.devjobdetail.DevJobDetail"
+        android:label="DevJobDetail"
+        tools:layout="@layout/devjob_detail_fragment">
+        <argument
+            android:name="devJob"
+            app:argType="com.martdev.android.devjobs.network.DevJob" />
+    </fragment>
+</navigation>
