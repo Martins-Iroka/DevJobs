@@ -2,9 +2,11 @@ package com.martdev.android.devjobs.devjobresult
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.martdev.android.devjobs.R
 import com.martdev.android.devjobs.databinding.DevjobItemViewBinding
 import com.martdev.android.devjobs.network.DevJob
 
@@ -30,7 +32,10 @@ class DevJobAdapter(private val onClickListener: OnClickListener)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DevJobViewHolder {
-        return DevJobViewHolder(DevjobItemViewBinding.inflate(LayoutInflater.from(parent.context)))
+        val binding =
+                DataBindingUtil.inflate<DevjobItemViewBinding>(LayoutInflater.from(parent.context),
+                        R.layout.devjob_item_view, parent, false)
+        return DevJobViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: DevJobViewHolder, position: Int) {

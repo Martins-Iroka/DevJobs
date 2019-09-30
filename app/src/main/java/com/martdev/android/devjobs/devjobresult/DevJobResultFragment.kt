@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.martdev.android.devjobs.DevJobFactory
 import com.martdev.android.devjobs.R
 import com.martdev.android.devjobs.databinding.DevjobsResultFragmentBinding
@@ -28,6 +29,8 @@ class DevJobResultFragment : Fragment() {
 
         binding.devJobVM = viewModel
 
+        binding.devjobRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+
         binding.devjobRecyclerView.adapter = DevJobAdapter(DevJobAdapter.OnClickListener {
             viewModel.showJobDetails(it)
         })
@@ -38,6 +41,7 @@ class DevJobResultFragment : Fragment() {
                 viewModel.jobDetailShown()
             }
         })
+        setHasOptionsMenu(true)
         return binding.root
     }
 

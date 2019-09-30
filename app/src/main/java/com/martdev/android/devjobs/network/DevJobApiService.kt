@@ -23,7 +23,7 @@ private val retrofit = Retrofit.Builder()
 
 interface DevJobApiService {
 
-    @GET("positions")
+    @GET("positions.json")
     fun getDevJobsAsync(@Query("description") keyword: String):
             Deferred<List<DevJob>>
 }

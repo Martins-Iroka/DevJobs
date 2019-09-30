@@ -15,32 +15,32 @@
 
         <ImageView
             android:id="@+id/company_logo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:contentDescription="@string/company_logo"
+            app:imageUrl="@{devJob.companyLogo}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/gallery_thumb"
-            android:contentDescription="@string/company_logo"
-            app:imageUrl="@{devJob.companyLogo}"/>
+            app:srcCompat="@android:drawable/gallery_thumb" />
 
         <TextView
             android:id="@+id/job_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="18sp"
             android:text="@{devJob.title}"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/company_logo"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="TextView" />
+            tools:text="Title" />
 
         <TextView
             android:id="@+id/company_name"
@@ -48,38 +48,42 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/company_logo"
             app:layout_constraintTop_toBottomOf="@+id/job_title"
-            tools:text="TextView"
+            tools:text="Company"
             android:text="@{devJob.company}"/>
 
         <TextView
             android:id="@+id/full_part_time"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textSize="12sp"
+            android:text="@{devJob.type}"
             android:textColor="@android:color/holo_green_dark"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/company_name"
             app:layout_constraintTop_toBottomOf="@+id/job_title"
-            tools:text="TextView"
-            android:text="@{devJob.type}"
-            />
+            tools:text="Type" />
 
         <TextView
             android:id="@+id/job_location"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:textSize="12sp"
+            android:text="@{devJob.location}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/company_logo"
-            app:layout_constraintStart_toStartOf="@+id/company_name"
             app:layout_constraintTop_toBottomOf="@id/company_name"
-            tools:text="TextView"
-            android:text="@{devJob.location}"/>
+            tools:text="Location" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

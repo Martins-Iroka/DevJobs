@@ -1,9 +1,12 @@
 package com.martdev.android.devjobs
 
+import android.os.Build
+import android.text.Html
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
+import androidx.core.text.HtmlCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -66,5 +69,14 @@ fun bindTextView(statusView: TextView, status: DevJobApiStatus?) {
         }
 
         DevJobApiStatus.DONE -> statusView.visibility = View.GONE
+    }
+}
+
+@BindingAdapter("description")
+fun bindDescriptionView(descriptionView: TextView, description: String) {
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        descriptionView.text = Html.fromHtml(description, Html.FROM_HTML_MODE_LEGACY)
+    } else {
+        descriptionView.text = HtmlCompat.fromHtml(description, HtmlCompat.FROM_HTML_MODE_LEGACY)
     }
 }

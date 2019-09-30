@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/devJobSearchFragment"
         android:name="com.martdev.android.devjobs.devjobsearch.DevJobSearchFragment"
-        android:label="DevJobSearchFragment"
+        android:label="DevJob"
         tools:layout="@layout/devjobs_search_fragment">
         <action
             android:id="@+id/action_devJobSearchFragment_to_devJobResultFragment"
@@ -17,7 +17,7 @@
     <fragment
         android:id="@+id/devJobResultFragment"
         android:name="com.martdev.android.devjobs.devjobresult.DevJobResultFragment"
-        android:label="DevJobResultFragment"
+        android:label="DevJob"
         tools:layout="@layout/devjobs_result_fragment">
         <argument
             android:name="keyword"
@@ -26,7 +26,7 @@
             android:id="@+id/action_devJobResultFragment_to_devJobDetail"
             app:destination="@id/devJobDetail" />
     </fragment>
-    <fragment
+    <activity
         android:id="@+id/devJobDetail"
         android:name="com.martdev.android.devjobs.devjobdetail.DevJobDetail"
         android:label="DevJobDetail"
@@ -34,5 +34,5 @@
         <argument
             android:name="devJob"
             app:argType="com.martdev.android.devjobs.network.DevJob" />
-    </fragment>
+    </activity>
 </navigation>

@@ -12,25 +12,32 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/coordinator">
+        android:id="@+id/coordinator"
+        android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:id="@+id/appBar"
+            android:layout_width="410dp"
+            android:layout_height="300dp"
+            android:fitsSystemWindows="true"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsingBar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:contentScrim="?attr/colorPrimary">
 
                 <ImageView
+                    android:id="@+id/logo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
+                    android:fitsSystemWindows="true"
                     android:contentDescription="@string/logo"
-                    app:imageUrl="@{devJobVM.devJob.companyLogo}"/>
+                    app:imageUrl="@{devJobVM.devJob.companyLogo}"
+                    tools:src="@tools:sample/backgrounds/scenic"/>
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -58,8 +65,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="32dp"
-                    tools:text="Apply"
-                    android:text="@{devJobVM.devJob.howToApply}"
+                    android:drawableEnd="@drawable/ic_arrow_forward_black_24dp"
+                    android:text="@string/apply"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:onClick="@{() -> devJobVM.navigateToWeb()}"
+                    android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -67,25 +77,45 @@
                     android:id="@+id/job_description"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    tools:text="Description"
-                    android:text="@{devJobVM.devJob.description}"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    app:description="@{devJobVM.devJob.description}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/apply_link" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView3"
+                    tools:text="Description" />
 
                 <TextView
                     android:id="@+id/apply_link2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginBottom="16dp"
-                    tools:text="Apply"
-                    android:text="@{devJobVM.devJob.howToApply}"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="32dp"
+                    android:drawableEnd="@drawable/ic_arrow_forward_black_24dp"
+                    android:onClick="@{() -> devJobVM.navigateToWeb()}"
+                    android:text="@string/apply"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/job_description" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/background"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/apply_link" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 

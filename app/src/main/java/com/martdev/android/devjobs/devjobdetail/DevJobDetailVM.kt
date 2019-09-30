@@ -12,7 +12,20 @@ class DevJobDetailVM(devJob: DevJob) : ViewModel() {
     val devJob: LiveData<DevJob>
         get() = _devJob
 
+    private val _navigate = MutableLiveData<DevJob>()
+
+    val navigateToWebPage: LiveData<DevJob>
+        get() = _navigate
+
     init {
         _devJob.value = devJob
+    }
+
+    fun navigateToWeb() {
+        _navigate.value = _devJob.value
+    }
+
+    fun navigatedToWebPage() {
+        _navigate.value = null
     }
 }

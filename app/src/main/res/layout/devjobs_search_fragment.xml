@@ -14,9 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
-            layout="@layout/toolbar"/>
-
         <EditText
             android:id="@+id/search_job_view"
             android:layout_width="0dp"

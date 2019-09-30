@@ -1,5 +1,6 @@
 package com.martdev.android.devjobs.devjobresult
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -47,6 +48,7 @@ class DevJobResultVM(keyword: String) : ViewModel() {
                 if (devJobs.isNullOrEmpty()) _status.value = DevJobApiStatus.LIST_ERROR
                 else _devJobs.value = devJobs
             } catch (e: Exception) {
+                Log.e("Result", "The error message is " + e.message)
                 _status.value = DevJobApiStatus.INTERNET_ERROR
                 _devJobs.value = ArrayList()
             }
