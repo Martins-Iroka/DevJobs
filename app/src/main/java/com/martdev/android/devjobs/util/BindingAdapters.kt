@@ -1,4 +1,4 @@
-package com.martdev.android.devjobs
+package com.martdev.android.devjobs.util
 
 import android.os.Build
 import android.text.Html
@@ -12,9 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.martdev.android.devjobs.R
 import com.martdev.android.devjobs.devjobresult.DevJobAdapter
 import com.martdev.android.devjobs.devjobresult.DevJobApiStatus
-import com.martdev.android.devjobs.network.DevJob
+import com.martdev.android.devjobs.devjobrepo.network.DevJob
 
 @BindingAdapter("listData")
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<DevJob>?) {

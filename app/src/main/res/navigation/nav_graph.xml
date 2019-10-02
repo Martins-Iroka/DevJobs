@@ -33,6 +33,6 @@
         tools:layout="@layout/devjob_detail_fragment">
         <argument
             android:name="devJob"
-            app:argType="com.martdev.android.devjobs.network.DevJob" />
+            app:argType="com.martdev.android.devjobs.devjobrepo.network.DevJob" />
     </activity>
 </navigation>

@@ -1,11 +1,13 @@
 package com.martdev.android.devjobs.devjobresult
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.martdev.android.devjobs.network.DevJob
-import com.martdev.android.devjobs.network.DevJobApi
+import com.martdev.android.devjobs.devjobrepo.DevJobRepo
+import com.martdev.android.devjobs.devjobrepo.network.DevJob
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -13,7 +15,7 @@ import kotlinx.coroutines.launch
 
 enum class DevJobApiStatus { LOADING, INTERNET_ERROR, LIST_ERROR, DONE }
 
-class DevJobResultVM(keyword: String) : ViewModel() {
+class DevJobResultVM(keyword: String, application: Application) : AndroidViewModel(application) {
 
     private val _status = MutableLiveData<DevJobApiStatus>()
 
@@ -40,10 +42,9 @@ class DevJobResultVM(keyword: String) : ViewModel() {
 
     private fun getDevJobs(keyword: String) {
         uiScope.launch {
-            val devJobDeferred = DevJobApi.retrofitService.getDevJobsAsync(keyword)
             try {
                 _status.value = DevJobApiStatus.LOADING
-                val devJobs = devJobDeferred.await()
+                val devJobs = DevJobRepo.getDevJobs(keyword)
                 _status.value = DevJobApiStatus.DONE
                 if (devJobs.isNullOrEmpty()) _status.value = DevJobApiStatus.LIST_ERROR
                 else _devJobs.value = devJobs

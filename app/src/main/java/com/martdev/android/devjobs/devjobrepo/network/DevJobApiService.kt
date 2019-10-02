@@ -1,4 +1,4 @@
-package com.martdev.android.devjobs.network
+package com.martdev.android.devjobs.devjobrepo.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi

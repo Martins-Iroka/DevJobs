@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.martdev.android.devjobs.R
 import com.martdev.android.devjobs.databinding.DevjobItemViewBinding
-import com.martdev.android.devjobs.network.DevJob
+import com.martdev.android.devjobs.devjobrepo.network.DevJob
 
 class DevJobAdapter(private val onClickListener: OnClickListener)
     : ListAdapter<DevJob, DevJobAdapter.DevJobViewHolder>(DiffCallback) {

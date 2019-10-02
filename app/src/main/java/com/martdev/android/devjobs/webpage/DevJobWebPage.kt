@@ -1,4 +1,4 @@
-package com.martdev.android.devjobs
+package com.martdev.android.devjobs.webpage
 
 import android.content.Context
 import android.content.Intent
@@ -11,6 +11,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
 import androidx.databinding.DataBindingUtil
+import com.martdev.android.devjobs.R
 import com.martdev.android.devjobs.databinding.DevjobWebpageBinding
 
 class DevJobWebPage : AppCompatActivity() {

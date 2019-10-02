@@ -22,7 +22,7 @@ class DevJobResultFragment : Fragment() {
                 R.layout.devjobs_result_fragment, container, false)
 
         val keyword = DevJobResultFragmentArgs.fromBundle(arguments!!).keyword
-        val factory = DevJobFactory(keyword = keyword)
+        val factory = DevJobFactory(keyword = keyword, application = activity?.application)
         viewModel = ViewModelProviders.of(this, factory)[DevJobResultVM::class.java]
 
         binding.lifecycleOwner = this

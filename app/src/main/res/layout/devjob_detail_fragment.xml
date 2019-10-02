@@ -17,7 +17,7 @@
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBar"
-            android:layout_width="410dp"
+            android:layout_width="match_parent"
             android:layout_height="300dp"
             android:fitsSystemWindows="true"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -33,6 +33,8 @@
                     android:id="@+id/logo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:adjustViewBounds="false"
+                    android:cropToPadding="false"
                     android:scaleType="centerCrop"
                     android:fitsSystemWindows="true"
                     android:contentDescription="@string/logo"

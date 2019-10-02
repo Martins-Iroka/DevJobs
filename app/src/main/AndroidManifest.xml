@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DevJobWebPage"
+        <activity android:name=".webpage.DevJobWebPage"
             android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity android:name=".devjobdetail.DevJobDetail" />
     </application>
