@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.martdev.android.devjobs.R
 import com.martdev.android.devjobs.databinding.DevjobItemViewBinding
-import com.martdev.android.devjobs.devjobrepo.network.DevJob
+import com.martdev.android.devjobs.data.DevJob
 
 class DevJobAdapter(private val onClickListener: OnClickListener)
     : ListAdapter<DevJob, DevJobAdapter.DevJobViewHolder>(DiffCallback) {
@@ -42,11 +42,11 @@ class DevJobAdapter(private val onClickListener: OnClickListener)
         val devJob = getItem(position)
         holder.bind(devJob)
         holder.itemView.setOnClickListener {
-            onClickListener.onClick(devJob)
+            onClickListener.onClick(devJob.id)
         }
     }
 
-    class OnClickListener(val clickListener: (devJob: DevJob) -> Unit) {
-        fun onClick(devJob: DevJob) = clickListener(devJob)
+    class OnClickListener(val clickListener: (jobId: String) -> Unit) {
+        fun onClick(jobId: String) = clickListener(jobId)
     }
 }

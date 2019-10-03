@@ -15,7 +15,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.martdev.android.devjobs.R
 import com.martdev.android.devjobs.devjobresult.DevJobAdapter
 import com.martdev.android.devjobs.devjobresult.DevJobApiStatus
-import com.martdev.android.devjobs.devjobrepo.network.DevJob
+import com.martdev.android.devjobs.data.DevJob
 
 @BindingAdapter("listData")
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<DevJob>?) {
@@ -74,10 +74,10 @@ fun bindTextView(statusView: TextView, status: DevJobApiStatus?) {
 }
 
 @BindingAdapter("description")
-fun bindDescriptionView(descriptionView: TextView, description: String) {
+fun bindDescriptionView(descriptionView: TextView, description: String?) {
     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        descriptionView.text = Html.fromHtml(description, Html.FROM_HTML_MODE_LEGACY)
+        descriptionView.text = description?.let { Html.fromHtml(it, Html.FROM_HTML_MODE_LEGACY) }
     } else {
-        descriptionView.text = HtmlCompat.fromHtml(description, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        descriptionView.text = description?.let { HtmlCompat.fromHtml(it, HtmlCompat.FROM_HTML_MODE_LEGACY) }
     }
 }

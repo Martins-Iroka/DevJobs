@@ -1,19 +1,19 @@
 package com.martdev.android.devjobs.devjobdetail
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.martdev.android.devjobs.devjobrepo.DevJobRepo
-import com.martdev.android.devjobs.devjobrepo.local.DevJobDatabase
-import com.martdev.android.devjobs.devjobrepo.network.DevJob
+import androidx.lifecycle.ViewModel
+import com.martdev.android.devjobs.data.DevJob
+import com.martdev.android.devjobs.data.source.DevJobRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import com.martdev.android.devjobs.data.Result.Success as Success
 
-class DevJobDetailVM(devJob: DevJob, application: Application)
-    : AndroidViewModel(application) {
+class DevJobDetailVM(jobId: String, private val repo: DevJobRepository)
+    : ViewModel() {
 
 
     private val job = SupervisorJob()
@@ -32,14 +32,21 @@ class DevJobDetailVM(devJob: DevJob, application: Application)
 
     val snackMessage = MutableLiveData<Int>()
 
-    private val database = DevJobDatabase.getDatabase(application)
-    private var repo = DevJobRepo.getRepo(database)
-
     init {
-        _devJob.value = devJob
+        getDevJob(jobId)
     }
 
-    var isBookmarked = _devJob.value?.isBookmarked!!
+    private fun getDevJob(jobId: String){
+        uiScope.launch {
+            repo.getDevJob(jobId).let { result ->
+                if (result is Success){
+                    _devJob.value = result.data
+                } else {
+                    Timber.e("GetDevJob error")
+                }
+            }
+        }
+    }
 
     fun navigateToWeb() {
         _navigate.value = _devJob.value
@@ -51,20 +58,6 @@ class DevJobDetailVM(devJob: DevJob, application: Application)
 
     fun snackMessageShown() {
         snackMessage.value = null
-    }
-
-    fun bookmarkClicked() {
-        uiScope.launch {
-            if (!isBookmarked) {
-                devJob.value?.isBookmarked = true
-                repo.insertDevJob(devJob.value!!)
-                snackMessage.value = 0
-            } else {
-                devJob.value?.isBookmarked = false
-                repo.deleteDevJobs()
-                snackMessage.value = 1
-            }
-        }
     }
 
     override fun onCleared() {

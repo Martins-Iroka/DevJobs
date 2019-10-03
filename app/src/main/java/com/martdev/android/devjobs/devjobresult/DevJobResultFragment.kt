@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.martdev.android.devjobs.DevJobFactory
+import com.martdev.android.devjobs.Injectors
 import com.martdev.android.devjobs.R
 import com.martdev.android.devjobs.databinding.DevjobsResultFragmentBinding
 
@@ -22,7 +23,7 @@ class DevJobResultFragment : Fragment() {
                 R.layout.devjobs_result_fragment, container, false)
 
         val keyword = DevJobResultFragmentArgs.fromBundle(arguments!!).keyword
-        val factory = DevJobFactory(keyword = keyword, application = activity?.application)
+        val factory = DevJobFactory(keyword = keyword, repository = Injectors.provideDevJobRepository(activity!!.application))
         viewModel = ViewModelProviders.of(this, factory)[DevJobResultVM::class.java]
 
         binding.lifecycleOwner = this
@@ -61,6 +62,8 @@ class DevJobResultFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return if (query != null) {
                     viewModel.searchForJob(query)
+                    searchView.onActionViewCollapsed()
+                    activity?.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
                     true
                 } else false
             }

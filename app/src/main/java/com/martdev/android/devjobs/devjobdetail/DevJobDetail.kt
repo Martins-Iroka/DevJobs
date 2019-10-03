@@ -13,6 +13,7 @@ import androidx.navigation.navArgs
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.martdev.android.devjobs.DevJobFactory
+import com.martdev.android.devjobs.Injectors
 import com.martdev.android.devjobs.webpage.DevJobWebPage
 import com.martdev.android.devjobs.R
 import com.martdev.android.devjobs.databinding.DevjobDetailFragmentBinding
@@ -29,7 +30,7 @@ class DevJobDetail : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.devjob_detail_fragment)
 
-        val factory = DevJobFactory(devJob = devJobArg.devJob, application = application)
+        val factory = DevJobFactory(jobId = devJobArg.jobId, repository = Injectors.provideDevJobRepository(application))
 
         viewModel = ViewModelProviders.of(this, factory)[DevJobDetailVM::class.java]
 
@@ -44,7 +45,7 @@ class DevJobDetail : AppCompatActivity() {
 
         viewModel.navigateToWebPage.observe(this, Observer { devJob ->
             if (devJob != null) {
-                DevJobWebPage.newIntent(this, devJob.url?.toUri()).also {
+                DevJobWebPage.newIntent(this, devJob.url.toUri()).also {
                     startActivity(it)
                 }
                 viewModel.navigatedToWebPage()
@@ -63,22 +64,12 @@ class DevJobDetail : AppCompatActivity() {
                 }
             }
         })
-
+        setSupportActionBar(binding.toolbar)
         handleCollapsedToolbarTitle()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.devjob_details, menu)
-
-        val bookmarkItem = menu.findItem(R.id.action_bookmark)
-        if (viewModel.isBookmarked) {
-            bookmarkItem.setIcon(R.drawable.ic_bookmark_black_24dp)
-                    .title = "Remove from bookmark"
-        } else {
-            bookmarkItem.setIcon(R.drawable.ic_bookmark_border_black_24dp)
-                    .title = "Add to bookmark"
-        }
-
         return true
     }
 
@@ -90,14 +81,8 @@ class DevJobDetail : AppCompatActivity() {
                 ShareCompat.IntentBuilder.from(this)
                         .setType("text/plain")
                         .setSubject(devJob.title)
-                        .setText("${devJob.company} is hiring. Check it out" + jobUrl)
-                        .createChooserIntent()
-                return true
-            }
-
-            R.id.action_bookmark -> {
-                viewModel.bookmarkClicked()
-                invalidateOptionsMenu()
+                        .setText("${devJob.company} is hiring. Check it out\n\n" + jobUrl)
+                        .createChooserIntent().also { startActivity(it) }
                 return true
             }
         }
