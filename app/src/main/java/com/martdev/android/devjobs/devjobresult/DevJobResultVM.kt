@@ -1,5 +1,6 @@
 package com.martdev.android.devjobs.devjobresult
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import com.martdev.android.devjobs.data.Result.Success as Success
 
 enum class DevJobApiStatus { LOADING, INTERNET_ERROR, LIST_ERROR, DONE }
@@ -45,13 +47,15 @@ class DevJobResultVM(keyword: String, private val repo: DevJobRepository) : View
 
             val devJobResult = repo.getDevJobs(keyword)
             if (devJobResult is Success) {
+                Log.i("DevJobVM", "is Success")
                 _status.value = DevJobApiStatus.DONE
                 val jobs = devJobResult.data
                 if (jobs.isEmpty()) DevJobApiStatus.LIST_ERROR
                 else _devJobs.value = jobs
             } else {
+                Log.e("DevJobVM", "is Error")
                 _status.value = DevJobApiStatus.INTERNET_ERROR
-                _devJobs.value = emptyList()
+                _devJobs.value = null
             }
         }
     }
