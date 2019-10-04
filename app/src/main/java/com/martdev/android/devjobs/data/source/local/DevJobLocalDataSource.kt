@@ -1,5 +1,6 @@
 package com.martdev.android.devjobs.data.source.local
 
+import android.util.Log
 import com.martdev.android.devjobs.data.DevJob
 import com.martdev.android.devjobs.data.Result
 import com.martdev.android.devjobs.data.Result.Error
@@ -18,8 +19,16 @@ class DevJobLocalDataSource internal constructor(
 
     override suspend fun getDevJobs(keyword: String): Result<List<DevJob>> = withContext(ioDispatcher) {
             return@withContext try {
-                Success(devJobDao.getDevJobs())
+                val devJobs = devJobDao.getDevJobs()
+                when {
+                    devJobs.isNullOrEmpty() -> {
+                        Log.e("Local data source", "Local datasource list is empty")
+                        Error(Exception("Local datasource list is empty"))
+                    }
+                    else -> Success(devJobs)
+                }
             } catch (e: Exception) {
+                Log.e("Local data source", "Local datasource error")
                 Error(e)
             }
         }

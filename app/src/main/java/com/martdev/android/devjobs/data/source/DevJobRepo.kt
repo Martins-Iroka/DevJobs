@@ -51,6 +51,7 @@ class DevJobRepo(
             is Error -> Log.w("DevJobRepo","Remote data source fetch failed")
             is Success -> {
                 refreshLocalDataSource(remoteJobs.data)
+                Log.i("DevJobRepo", "Remote data successful")
             }
             else -> throw IllegalStateException()
         }
