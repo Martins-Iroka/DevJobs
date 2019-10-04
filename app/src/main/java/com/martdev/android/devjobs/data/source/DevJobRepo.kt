@@ -1,6 +1,5 @@
 package com.martdev.android.devjobs.data.source
 
-import android.util.Log
 import com.martdev.android.devjobs.data.DevJob
 import com.martdev.android.devjobs.data.Result
 import com.martdev.android.devjobs.data.Result.Error
@@ -48,10 +47,10 @@ class DevJobRepo(
 
     private suspend fun fetchJobsFromRemoteOrLocal(keyword: String): Result<List<DevJob>> {
         when(val remoteJobs = remote.getDevJobs(keyword)) {
-            is Error -> Log.w("DevJobRepo","Remote data source fetch failed")
+            is Error -> Timber.e("Remote data source fetch failed")
             is Success -> {
                 refreshLocalDataSource(remoteJobs.data)
-                Log.i("DevJobRepo", "Remote data successful")
+                Timber.i("Remote data successful")
             }
             else -> throw IllegalStateException()
         }

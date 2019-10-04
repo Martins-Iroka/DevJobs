@@ -1,6 +1,5 @@
 package com.martdev.android.devjobs.data.source.local
 
-import android.util.Log
 import com.martdev.android.devjobs.data.DevJob
 import com.martdev.android.devjobs.data.Result
 import com.martdev.android.devjobs.data.Result.Error
@@ -9,6 +8,7 @@ import com.martdev.android.devjobs.data.source.DevJobDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class DevJobLocalDataSource internal constructor(
         private val devJobDao: DevJobDao,
@@ -22,13 +22,13 @@ class DevJobLocalDataSource internal constructor(
                 val devJobs = devJobDao.getDevJobs()
                 when {
                     devJobs.isNullOrEmpty() -> {
-                        Log.e("Local data source", "Local datasource list is empty")
+                        Timber.e( "Local datasource list is empty")
                         Error(Exception("Local datasource list is empty"))
                     }
                     else -> Success(devJobs)
                 }
             } catch (e: Exception) {
-                Log.e("Local data source", "Local datasource error")
+                Timber.e( "Local datasource error")
                 Error(e)
             }
         }

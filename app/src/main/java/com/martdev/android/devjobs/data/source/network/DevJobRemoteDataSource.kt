@@ -1,10 +1,10 @@
 package com.martdev.android.devjobs.data.source.network
 
-import android.util.Log
 import com.martdev.android.devjobs.data.DevJob
 import com.martdev.android.devjobs.data.Result
 import com.martdev.android.devjobs.data.Result.Error
 import com.martdev.android.devjobs.data.Result.Success
+import timber.log.Timber
 
 class DevJobRemoteDataSource(private val jobApi: DevJobApiService) {
 
@@ -13,13 +13,13 @@ class DevJobRemoteDataSource(private val jobApi: DevJobApiService) {
             val result = jobApi.getDevJobsAsync(keyword).await()
             when {
                 result.isNullOrEmpty() ->{
-                    Log.e("remote data source", "Local datasource list is empty")
+                    Timber.e( "Local datasource list is empty")
                     Error(Exception("remote datasource list is empty"))
                 }
                 else -> Success(result)
             }
         } catch (e: Exception) {
-            Log.e("remote data source", "remote datasource error")
+            Timber.e( "remote datasource error")
             Error(e)
         }
     }

@@ -88,4 +88,7 @@ dependencies {
     //Timber
     implementation "com.jakewharton.timber:timber:4.7.1"
 
+    //Pagination
+    implementation "androidx.paging:paging-runtime:2.1.0"
+
 }

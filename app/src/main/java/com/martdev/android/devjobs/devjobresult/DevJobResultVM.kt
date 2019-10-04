@@ -1,6 +1,5 @@
 package com.martdev.android.devjobs.devjobresult
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -47,13 +46,13 @@ class DevJobResultVM(keyword: String, private val repo: DevJobRepository) : View
 
             val devJobResult = repo.getDevJobs(keyword)
             if (devJobResult is Success) {
-                Log.i("DevJobVM", "is Success")
+                Timber.i( "is Success")
                 _status.value = DevJobApiStatus.DONE
                 val jobs = devJobResult.data
                 if (jobs.isEmpty()) DevJobApiStatus.LIST_ERROR
                 else _devJobs.value = jobs
             } else {
-                Log.e("DevJobVM", "is Error")
+                Timber.e( "is Error")
                 _status.value = DevJobApiStatus.INTERNET_ERROR
                 _devJobs.value = null
             }
