@@ -1,7 +1,6 @@
 package com.martdev.android.devjobs
 
 import android.content.Context
-import com.martdev.android.devjobs.data.source.DevJobDataSource
 import com.martdev.android.devjobs.data.source.DevJobRepository
 import com.martdev.android.devjobs.data.source.DevJobRepo
 import com.martdev.android.devjobs.data.source.local.DevJobDatabase
@@ -22,7 +21,7 @@ object Injectors {
         return DevJobRemoteDataSource(jobApiService)
     }
 
-    private fun createLocalDataSource(context: Context): DevJobDataSource {
+    private fun createLocalDataSource(context: Context): DevJobLocalDataSource {
         val devJobDao = DevJobDatabase.getDatabase(context).devJobDao
         return DevJobLocalDataSource(devJobDao)
     }

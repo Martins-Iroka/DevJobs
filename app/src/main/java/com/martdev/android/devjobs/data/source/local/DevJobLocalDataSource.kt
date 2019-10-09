@@ -4,7 +4,6 @@ import com.martdev.android.devjobs.data.DevJob
 import com.martdev.android.devjobs.data.Result
 import com.martdev.android.devjobs.data.Result.Error
 import com.martdev.android.devjobs.data.Result.Success
-import com.martdev.android.devjobs.data.source.DevJobDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,11 +12,10 @@ import timber.log.Timber
 class DevJobLocalDataSource internal constructor(
         private val devJobDao: DevJobDao,
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-)
-    : DevJobDataSource {
+) {
 
 
-    override suspend fun getDevJobs(keyword: String): Result<List<DevJob>> = withContext(ioDispatcher) {
+    suspend fun getDevJobs(): Result<List<DevJob>> = withContext(ioDispatcher) {
             return@withContext try {
                 val devJobs = devJobDao.getDevJobs()
                 when {
@@ -33,7 +31,7 @@ class DevJobLocalDataSource internal constructor(
             }
         }
 
-    override suspend fun getDevJob(jobId: String): Result<DevJob> = withContext(ioDispatcher) {
+    suspend fun getDevJob(jobId: String): Result<DevJob> = withContext(ioDispatcher) {
             try {
                 val devJob = devJobDao.getDevJob(jobId)
                 if (devJob != null) return@withContext Success(devJob)
@@ -43,11 +41,11 @@ class DevJobLocalDataSource internal constructor(
             }
         }
 
-    override suspend fun saveDevJob(job: DevJob) = withContext(ioDispatcher) {
+    suspend fun saveDevJob(job: DevJob) = withContext(ioDispatcher) {
         devJobDao.insertDevJob(job)
     }
 
-    override suspend fun deleteDevJobs() = withContext(ioDispatcher) {
+    suspend fun deleteDevJobs() = withContext(ioDispatcher) {
         devJobDao.deleteDevJobs()
     }
 }
