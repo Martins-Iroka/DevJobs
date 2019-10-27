@@ -3,15 +3,15 @@ package com.martdev.android.devjobs.devjobresult
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.martdev.android.devjobs.R
 import com.martdev.android.devjobs.databinding.DevjobItemViewBinding
 import com.martdev.android.devjobs.data.DevJob
 
 class DevJobAdapter(private val onClickListener: OnClickListener)
-    : ListAdapter<DevJob, DevJobAdapter.DevJobViewHolder>(DiffCallback) {
+    : PagedListAdapter<DevJob, DevJobAdapter.DevJobViewHolder>(DiffCallback) {
 
     class DevJobViewHolder(private var binding: DevjobItemViewBinding) :
             RecyclerView.ViewHolder(binding.root) {
@@ -40,9 +40,9 @@ class DevJobAdapter(private val onClickListener: OnClickListener)
 
     override fun onBindViewHolder(holder: DevJobViewHolder, position: Int) {
         val devJob = getItem(position)
-        holder.bind(devJob)
+        devJob?.let { holder.bind(it) }
         holder.itemView.setOnClickListener {
-            onClickListener.onClick(devJob.id)
+            onClickListener.onClick(devJob!!.id)
         }
     }
 

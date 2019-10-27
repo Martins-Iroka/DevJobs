@@ -1,32 +1,51 @@
-/*
- * Copyright (C) 2019 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.martdev.android.devjobs.data.source
 
-import com.martdev.android.devjobs.data.DevJob
-import com.martdev.android.devjobs.data.Result
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.distinctUntilChanged
+import androidx.paging.LivePagedListBuilder
+import com.martdev.android.devjobs.data.source.local.DevJobLocalDataSource
+import com.martdev.android.devjobs.data.source.network.DevJobRemoteDataSource
+import com.martdev.android.devjobs.data.source.paging.DevJobPageDataSourceFactory
+import kotlinx.coroutines.CoroutineScope
 
-/**
- * Interface to the data layer.
- */
-interface DevJobRepository {
+class DevJobRepository(
+        private val remote: DevJobRemoteDataSource,
+        private val local: DevJobLocalDataSource) {
 
-    suspend fun getDevJobs(keyword: String): Result<List<DevJob>>
+    fun getDevJobs(keyword: String, scope: CoroutineScope, networkConnected: Boolean): SourceResult {
+        return if (networkConnected) getRemoteDevJobs(keyword, scope)
+        else getLocalDevJobs()
+    }
 
-    suspend fun getDevJob(jobId: String): Result<DevJob>
+    private fun getRemoteDevJobs(keyword: String, scope: CoroutineScope): SourceResult {
+        val factory = DevJobPageDataSourceFactory(keyword, local, remote, scope)
 
-    suspend fun deleteDevJobs()
+        val jobPageList =
+                LivePagedListBuilder(factory, DevJobPageDataSourceFactory.pagedListConfig()).build()
+
+        val networkState = Transformations.switchMap(factory.liveData) {
+            it.network
+        }
+
+        return SourceResult(jobPageList, networkState)
+    }
+
+    private fun getLocalDevJobs(): SourceResult {
+        val jobPageList =
+                LivePagedListBuilder(local.getDevJobs(), DevJobPageDataSourceFactory.pagedListConfig()).build()
+
+        return SourceResult(jobPageList)
+    }
+
+
+    fun getDevJob(jobId: String) = resultLiveData(
+            localDatabase = {local.getDevJob(jobId)},
+            remoteDataSource = {remote.getDevJob(jobId)},
+            saveRemoteResult = {local.saveDevJob(it)}
+    )
+
+
+    suspend fun deleteDevJobs() {
+        local.deleteDevJobs()
+    }
 }

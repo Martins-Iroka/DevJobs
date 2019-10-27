@@ -24,8 +24,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:statusTextView="@{devJobVM.status}"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe"
@@ -35,7 +34,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:loadingStatus="@{devJobVM.status}">
+            app:loadingStatus="@{devJobVM.networkState}">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/devjob_recycler_view"

@@ -3,20 +3,24 @@ package com.martdev.android.devjobs.devjobdetail
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.navArgs
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.snackbar.Snackbar
 import com.martdev.android.devjobs.DevJobFactory
 import com.martdev.android.devjobs.Injectors
 import com.martdev.android.devjobs.webpage.DevJobWebPage
 import com.martdev.android.devjobs.R
+import com.martdev.android.devjobs.data.DevJob
+import com.martdev.android.devjobs.data.Result
 import com.martdev.android.devjobs.databinding.DevjobDetailFragmentBinding
+import com.martdev.android.devjobs.util.bindImage2
+import com.martdev.android.devjobs.util.formatHtml
 
 class DevJobDetail : AppCompatActivity() {
 
@@ -24,22 +28,27 @@ class DevJobDetail : AppCompatActivity() {
 
     private lateinit var binding: DevjobDetailFragmentBinding
 
-    private lateinit var viewModel: DevJobDetailVM
+    private val viewModel: DevJobDetailVM by viewModels {
+        DevJobFactory(jobId = devJobArg.jobId, repository = Injectors.provideDevJobRepository(application))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.devjob_detail_fragment)
 
-        val factory = DevJobFactory(jobId = devJobArg.jobId, repository = Injectors.provideDevJobRepository(application))
-
-        viewModel = ViewModelProviders.of(this, factory)[DevJobDetailVM::class.java]
-
         binding.devJobVM = viewModel
         binding.lifecycleOwner = this
 
-        viewModel.devJob.observe(this, Observer {
-            it?.let {
-                binding.toolbar.title = it.title
+        viewModel.devJob.observe(this, Observer {result ->
+            when(result.status) {
+                Result.Status.LOADING -> TODO() //TODO fix this
+                Result.Status.SUCCESS -> {
+                    binding.toolbar.title = result.data?.title
+                    handleCollapsedToolbarTitle(result.data)
+                    binding.logo.bindImage2(result.data?.companyLogo)
+                    binding.jobDescription.formatHtml(result.data?.description)
+                }
+                Result.Status.ERROR -> Toast.makeText(this, result.message, Toast.LENGTH_LONG).show()
             }
         })
 
@@ -51,21 +60,7 @@ class DevJobDetail : AppCompatActivity() {
                 viewModel.navigatedToWebPage()
             }
         })
-
-        viewModel.snackMessage.observe(this, Observer {message ->
-            when(message) {
-                0 -> {
-                    Snackbar.make(binding.root, "Added to Bookmark", Snackbar.LENGTH_LONG).show()
-                    viewModel.snackMessageShown()
-                }
-                1 -> {
-                    Snackbar.make(binding.root, "Removed from Bookmark", Snackbar.LENGTH_LONG).show()
-                    viewModel.snackMessageShown()
-                }
-            }
-        })
         setSupportActionBar(binding.toolbar)
-        handleCollapsedToolbarTitle()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -76,7 +71,7 @@ class DevJobDetail : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
             R.id.action_share -> {
-                val devJob = viewModel.devJob.value
+                val devJob = viewModel.devJob.value?.data
                 val jobUrl = devJob?.url!!.toUri().buildUpon().scheme("https").build()
                 ShareCompat.IntentBuilder.from(this)
                         .setType("text/plain")
@@ -90,15 +85,14 @@ class DevJobDetail : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-
-    private fun handleCollapsedToolbarTitle() {
+    private fun handleCollapsedToolbarTitle(job: DevJob?) {
         binding.appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout: AppBarLayout, i: Int ->
             var scrollRange = -1
 
             if (scrollRange == -1) scrollRange = appBarLayout.totalScrollRange
 
             if (scrollRange + i == 0) {
-                binding.collapsingBar.title = viewModel.devJob.value?.company
+                binding.collapsingBar.title = job?.company
             } else {
                 binding.collapsingBar.title = ""
             }

@@ -38,7 +38,6 @@
                     android:scaleType="centerCrop"
                     android:fitsSystemWindows="true"
                     android:contentDescription="@string/logo"
-                    app:imageUrl="@{devJobVM.devJob.companyLogo}"
                     tools:src="@tools:sample/backgrounds/scenic"/>
 
                 <androidx.appcompat.widget.Toolbar
@@ -82,7 +81,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    app:description="@{devJobVM.devJob.description}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView3"

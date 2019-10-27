@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.martdev.android.devjobs.R
@@ -16,9 +15,7 @@ import com.martdev.android.devjobs.databinding.DevjobsSearchFragmentBinding
 
 class DevJobSearchFragment : Fragment() {
 
-    private val viewModel: DevJobSearchVM by lazy {
-        ViewModelProviders.of(this)[DevJobSearchVM::class.java]
-    }
+    private val viewModel: DevJobSearchVM by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DataBindingUtil.inflate<DevjobsSearchFragmentBinding>(inflater,

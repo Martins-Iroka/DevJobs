@@ -2,29 +2,34 @@ package com.martdev.android.devjobs.devjobresult
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.martdev.android.devjobs.DevJobFactory
 import com.martdev.android.devjobs.Injectors
 import com.martdev.android.devjobs.R
+import com.martdev.android.devjobs.data.Result
 import com.martdev.android.devjobs.databinding.DevjobsResultFragmentBinding
+import com.martdev.android.devjobs.util.ConnectivityUtil
+import kotlinx.android.synthetic.main.devjobs_result_fragment.*
 
 class DevJobResultFragment : Fragment() {
 
-    private lateinit var viewModel: DevJobResultVM
+    private val arg by navArgs<DevJobResultFragmentArgs>()
+
+    private val viewModel: DevJobResultVM by viewModels {
+        DevJobFactory(keyword = arg.keyword, repository = Injectors.provideDevJobRepository(activity!!.application))
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = DataBindingUtil.inflate<DevjobsResultFragmentBinding>(inflater,
                 R.layout.devjobs_result_fragment, container, false)
-
-        val keyword = DevJobResultFragmentArgs.fromBundle(arguments!!).keyword
-        val factory = DevJobFactory(keyword = keyword, repository = Injectors.provideDevJobRepository(activity!!.application))
-        viewModel = ViewModelProviders.of(this, factory)[DevJobResultVM::class.java]
 
         binding.lifecycleOwner = this
 
@@ -36,12 +41,29 @@ class DevJobResultFragment : Fragment() {
             viewModel.showJobDetails(it)
         })
 
+        viewModel.devJobs.observe(this, Observer {
+            if (it.isNullOrEmpty()) no_data_message.visibility = View.VISIBLE
+            else no_data_message.visibility = View.GONE
+        })
+
         viewModel.navigateToJobDetail.observe(this, Observer {
             if (it != null) {
                 this.findNavController().navigate(DevJobResultFragmentDirections.actionDevJobResultFragmentToDevJobDetail(it))
                 viewModel.jobDetailShown()
             }
         })
+
+        viewModel.networkState.observe(this, Observer {
+            if (it.status == Result.Status.ERROR) {
+                Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+            }
+        })
+        val isConnected = ConnectivityUtil.isConnected(context!!)
+        if (isConnected) {
+            viewModel.connectivityAvailable = isConnected
+        } else {
+            Toast.makeText(activity, "No internet connection", Toast.LENGTH_SHORT).show()
+        }
         setHasOptionsMenu(true)
         return binding.root
     }

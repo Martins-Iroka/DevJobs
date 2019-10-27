@@ -5,6 +5,7 @@ import com.martdev.android.devjobs.data.DevJob
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Deferred
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
@@ -26,11 +27,13 @@ private val retrofit = Retrofit.Builder()
 interface DevJobApiService {
 
     @GET("positions.json")
-    fun getDevJobsAsync(@Query("description") keyword: String):
-            Deferred<List<DevJob>>
+    fun getDevJobsAsync(@Query("description") keyword: String,
+                        @Query("page") page: Int,
+                        @Query("page_size") pageSize: Int):
+            Deferred<Response<List<DevJob>>>
 
     @GET("positions/{ID}.json")
-    fun getDevJobAsync(@Path("ID") id: String): Deferred<DevJob>
+    fun getDevJobAsync(@Path("ID") id: String): Deferred<Response<DevJob>>
 }
 
 object DevJobApi {

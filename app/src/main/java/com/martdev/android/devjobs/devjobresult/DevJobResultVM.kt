@@ -2,30 +2,16 @@ package com.martdev.android.devjobs.devjobresult
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.paging.PagedList
 import com.martdev.android.devjobs.data.DevJob
 import com.martdev.android.devjobs.data.source.DevJobRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import timber.log.Timber
-import com.martdev.android.devjobs.data.Result.Success as Success
-
-enum class DevJobApiStatus { LOADING, INTERNET_ERROR, LIST_ERROR, DONE }
 
 class DevJobResultVM(keyword: String, private val repo: DevJobRepository) : ViewModel() {
-
-    private val _status = MutableLiveData<DevJobApiStatus>()
-
-    val status: LiveData<DevJobApiStatus>
-        get() = _status
-
-    private val _devJobs =
-            MutableLiveData<List<DevJob>>().apply { value = emptyList() }
-
-    val devJobs: LiveData<List<DevJob>>
-        get() = _devJobs
 
     private val _navigateToJobDetail = MutableLiveData<String>()
 
@@ -36,27 +22,25 @@ class DevJobResultVM(keyword: String, private val repo: DevJobRepository) : View
 
     private val uiScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    init {
-        getDevJobs(keyword)
+    private val searchKeyword = MutableLiveData<String>()
+
+    var connectivityAvailable: Boolean = false
+
+    private val result = Transformations.map(searchKeyword) {
+        repo.getDevJobs(it, uiScope, connectivityAvailable)
     }
 
-    private fun getDevJobs(keyword: String) {
-        uiScope.launch {
-            _status.value = DevJobApiStatus.LOADING
-
-            val devJobResult = repo.getDevJobs(keyword)
-            if (devJobResult is Success) {
-                Timber.i( "is Success")
-                _status.value = DevJobApiStatus.DONE
-                val jobs = devJobResult.data
-                if (jobs.isEmpty()) DevJobApiStatus.LIST_ERROR
-                else _devJobs.value = jobs
-            } else {
-                Timber.e( "is Error")
-                _status.value = DevJobApiStatus.INTERNET_ERROR
-                _devJobs.value = null
-            }
+    val devJobs: LiveData<PagedList<DevJob>>
+        get() = Transformations.switchMap(result) {
+            it.data
         }
+
+    val networkState = Transformations.switchMap(result) {
+        it.networkState
+    }
+
+    init {
+        searchKeyword.value = keyword
     }
 
     override fun onCleared() {
@@ -72,5 +56,7 @@ class DevJobResultVM(keyword: String, private val repo: DevJobRepository) : View
         _navigateToJobDetail.value = null
     }
 
-    fun searchForJob(keyword: String) = getDevJobs(keyword)
+    fun searchForJob(keyword: String) {
+        searchKeyword.value = keyword
+    }
 }
