@@ -27,3 +27,15 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext {
+    //App dependencies
+    androidXSupportVersion = '1.0.0'
+    lifecycleVersion = '2.2.0-rc01'
+    navigationVersion = '2.2.0-rc01'
+    moshiVersion = '1.8.0'
+    retrofitVerison = '2.6.2'
+    coroutinesVersion = '1.3.0'
+    roomVersion = '2.2.1'
+    daggerVersion = '2.23.2'
+}
