@@ -11,17 +11,4 @@ abstract class DevJobDatabase : RoomDatabase() {
 
     abstract val devJobDao: DevJobDao
 
-    companion object {
-        private var INSTANCE: DevJobDatabase? = null
-
-        fun getDatabase(context: Context): DevJobDatabase {
-            synchronized(DevJobDatabase::class.java) {
-                if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.applicationContext,
-                            DevJobDatabase::class.java, "DevJobs").build()
-                }
-                return INSTANCE!!
-            }
-        }
-    }
 }

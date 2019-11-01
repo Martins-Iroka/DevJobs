@@ -5,15 +5,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.navArgs
 import com.google.android.material.appbar.AppBarLayout
-import com.martdev.android.devjobs.DevJobFactory
-import com.martdev.android.devjobs.Injectors
 import com.martdev.android.devjobs.webpage.DevJobWebPage
 import com.martdev.android.devjobs.R
 import com.martdev.android.devjobs.data.DevJob
@@ -21,16 +19,19 @@ import com.martdev.android.devjobs.data.Result
 import com.martdev.android.devjobs.databinding.DevjobDetailFragmentBinding
 import com.martdev.android.devjobs.util.bindImage2
 import com.martdev.android.devjobs.util.formatHtml
+import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
 
-class DevJobDetail : AppCompatActivity() {
+class DevJobDetail : DaggerAppCompatActivity() {
 
     private val devJobArg: DevJobDetailArgs by navArgs()
 
     private lateinit var binding: DevjobDetailFragmentBinding
 
-    private val viewModel: DevJobDetailVM by viewModels {
-        DevJobFactory(jobId = devJobArg.jobId, repository = Injectors.provideDevJobRepository(application))
-    }
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel: DevJobDetailVM by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +42,9 @@ class DevJobDetail : AppCompatActivity() {
 
         viewModel.devJob.observe(this, Observer {result ->
             when(result.status) {
-                Result.Status.LOADING -> TODO() //TODO fix this
+                Result.Status.LOADING -> binding.background.text = getString(R.string.loading_textview)
                 Result.Status.SUCCESS -> {
+                    binding.background.text = getString(R.string.background_textview)
                     binding.toolbar.title = result.data?.title
                     handleCollapsedToolbarTitle(result.data)
                     binding.logo.bindImage2(result.data?.companyLogo)
@@ -60,6 +62,7 @@ class DevJobDetail : AppCompatActivity() {
                 viewModel.navigatedToWebPage()
             }
         })
+        viewModel.showDetail(devJobArg.jobId)
         setSupportActionBar(binding.toolbar)
     }
 
@@ -82,7 +85,7 @@ class DevJobDetail : AppCompatActivity() {
             }
         }
 
-        return super.onOptionsItemSelected(item)
+        return super.onOptionsItemSelected(item!!)
     }
 
     private fun handleCollapsedToolbarTitle(job: DevJob?) {

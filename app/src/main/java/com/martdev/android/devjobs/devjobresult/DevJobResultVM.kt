@@ -1,33 +1,27 @@
 package com.martdev.android.devjobs.devjobresult
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import androidx.paging.PagedList
 import com.martdev.android.devjobs.data.DevJob
 import com.martdev.android.devjobs.data.source.DevJobRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import com.martdev.android.devjobs.data.source.SourceResult
+import javax.inject.Inject
 
-class DevJobResultVM(keyword: String, private val repo: DevJobRepository) : ViewModel() {
+class DevJobResultVM @Inject constructor(private val repo: DevJobRepository) : ViewModel() {
 
     private val _navigateToJobDetail = MutableLiveData<String>()
 
     val navigateToJobDetail: LiveData<String>
         get() = _navigateToJobDetail
 
-    private var viewModelJob = Job()
+    private val _searchKeyword = MutableLiveData<String>()
 
-    private val uiScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
-    private val searchKeyword = MutableLiveData<String>()
+    val searchKeyword: LiveData<String> = _searchKeyword
 
     var connectivityAvailable: Boolean = false
 
-    private val result = Transformations.map(searchKeyword) {
-        repo.getDevJobs(it, uiScope, connectivityAvailable)
+    private val result: LiveData<SourceResult> = Transformations.map(_searchKeyword) {
+        repo.getDevJobs(it, viewModelScope, connectivityAvailable)
     }
 
     val devJobs: LiveData<PagedList<DevJob>>
@@ -39,13 +33,8 @@ class DevJobResultVM(keyword: String, private val repo: DevJobRepository) : View
         it.networkState
     }
 
-    init {
-        searchKeyword.value = keyword
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
+    fun showResult(keyword: String) {
+        _searchKeyword.value = keyword
     }
 
     fun showJobDetails(jobId: String) {
@@ -57,6 +46,6 @@ class DevJobResultVM(keyword: String, private val repo: DevJobRepository) : View
     }
 
     fun searchForJob(keyword: String) {
-        searchKeyword.value = keyword
+        _searchKeyword.value = keyword
     }
 }

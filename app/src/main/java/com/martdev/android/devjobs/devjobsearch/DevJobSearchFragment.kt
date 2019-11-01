@@ -25,14 +25,14 @@ class DevJobSearchFragment : Fragment() {
 
         binding.lifecycleOwner = this
 
-        viewModel.showNoEntry.observe(this, Observer {
+        viewModel.showNoEntry.observe(viewLifecycleOwner, Observer {
             if (it == true) {
                 Snackbar.make(binding.root, "Enter a keyword", Snackbar.LENGTH_LONG).show()
                 viewModel.disableLiveData()
             }
         })
 
-        viewModel.navigateToResult.observe(this, Observer {
+        viewModel.navigateToResult.observe(viewLifecycleOwner, Observer {
             if (it == true) {
                 this.findNavController()
                         .navigate(DevJobSearchFragmentDirections

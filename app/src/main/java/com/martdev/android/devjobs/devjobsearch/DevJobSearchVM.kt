@@ -20,7 +20,6 @@ class DevJobSearchVM : ViewModel() {
     val navigateToResult: LiveData<Boolean> = _navigateToResult
 
     fun submitEntry() {
-
         if (keyword.value.isNullOrBlank()) {
             _showNoEntry.value = true
             return

@@ -66,11 +66,5 @@ class DevJobWebPage : AppCompatActivity() {
         fun newIntent(context: Context, uri: Uri?): Intent = Intent(context, DevJobWebPage::class.java).apply {
             data = uri
         }
-
-//        {
-//            val intent = Intent(context, DevJobWebPage::class.java)
-//            intent.data = uri
-//            return intent
-//        }
     }
 }

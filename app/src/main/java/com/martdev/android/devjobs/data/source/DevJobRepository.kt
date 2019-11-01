@@ -1,14 +1,14 @@
 package com.martdev.android.devjobs.data.source
 
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.distinctUntilChanged
 import androidx.paging.LivePagedListBuilder
 import com.martdev.android.devjobs.data.source.local.DevJobLocalDataSource
 import com.martdev.android.devjobs.data.source.network.DevJobRemoteDataSource
 import com.martdev.android.devjobs.data.source.paging.DevJobPageDataSourceFactory
 import kotlinx.coroutines.CoroutineScope
+import javax.inject.Inject
 
-class DevJobRepository(
+class DevJobRepository @Inject constructor(
         private val remote: DevJobRemoteDataSource,
         private val local: DevJobLocalDataSource) {
 

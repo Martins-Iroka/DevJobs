@@ -3,8 +3,9 @@ package com.martdev.android.devjobs.data.source.local
 import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import com.martdev.android.devjobs.data.DevJob
+import javax.inject.Inject
 
-class DevJobLocalDataSource internal constructor(private val devJobDao: DevJobDao) {
+class DevJobLocalDataSource @Inject constructor(private val devJobDao: DevJobDao) {
 
     fun getDevJobs(): DataSource.Factory<Int, DevJob> = devJobDao.getDevJobs()
 
